@@ -30,8 +30,8 @@ python3 train.py --tok_vocab ${dataset}/tok_vocab\
                 --dropout 0.2\
                 --unk_rate 0.33\
                 --epochs 1000\
-                --train_batch_size 4444\
-                --dev_batch_size 4444 \
+                --train_batch_size 500\
+                --dev_batch_size 500 \
                 --lr 1e-3 \
                 --warmup_steps 2000\
                 --print_every 1 \
@@ -42,4 +42,4 @@ python3 train.py --tok_vocab ${dataset}/tok_vocab\
                 --gpus 2\
                 --MASTER_ADDR localhost\
                 --MASTER_PORT 29506\
-                --start_rank 0
+                --start_rank 2

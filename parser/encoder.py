@@ -43,22 +43,31 @@ class WordEncoder(nn.Module):
         char_repr = self.char_embed(char_input.view(seq_len * bsz, -1))
         char_repr = self.char2word(char_repr).view(seq_len, bsz, -1)
 
+        #print("char_repr",char_repr.size())
+
         if self.pretrained_word_embed is not None:
             lem_repr = self.lem_embed(lem_input)
             tok_repr = self.pretrained_word_embed(tok_input)
+            #print("lem_input",lem_input.size(),tok_input.size())
+            #print("lem_repr",lem_repr.size(),tok_repr.size())
             reprs = [char_repr, lem_repr, tok_repr]  
         else:
             lem_repr = self.lem_embed(lem_input)
+            #print("lem_input",lem_input.size())
+            #print("lem_repr",lem_repr.size())
             reprs = [char_repr, lem_repr]
 
         if self.pos_embed is not None:
+            #print("pos_input",pos_input.size())
             pos_repr = self.pos_embed(pos_input)
             reprs.append(pos_repr)
         
         if self.ner_embed is not None:
+            #print("ner_input",ner_input.size())
             ner_repr = self.ner_embed(ner_input)
             reprs.append(ner_repr)
 
+        #print([x.size() for x in reprs])
         word = F.dropout(torch.cat(reprs, -1), p=self.dropout, training=self.training)
         word = self.out_proj(word)
         return word

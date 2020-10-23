@@ -1,5 +1,5 @@
 import torch
-import torch.distributed as dist
+#import torch.distributed as dist
 import torch.multiprocessing as mp
 
 from data import Vocab, DataLoader,load_pretrained_word_embed, DUM, END, CLS, NIL
@@ -121,9 +121,9 @@ def main(args, local_rank):
             pretrained_embs, device=device)
     
     if args.world_size > 1:
-        torch.manual_seed(19940117 + dist.get_rank())
-        torch.cuda.manual_seed_all(19940117 + dist.get_rank())
-        random.seed(19940117+dist.get_rank())
+        #torch.manual_seed(19940117 + dist.get_rank())
+        #torch.cuda.manual_seed_all(19940117 + dist.get_rank())
+        random.seed(19940117)
 
     model = model.cuda(local_rank)
     train_data = DataLoader(vocabs, lexical_mapping, args.train_data, args.train_batch_size, for_train=True)
@@ -160,9 +160,9 @@ def main(args, local_rank):
     epoch = 0
     while True:
         batch = queue.get()
-        print("epoch",epoch)
-        print("batches_acm",batches_acm)
-        print("used_batches",used_batches)
+        #print("epoch",epoch)
+        #print("batches_acm",batches_acm)
+        #print("used_batches",used_batches)
         if isinstance(batch, str):
             epoch += 1
             print ('epoch', epoch, 'done', 'batches', batches_acm)
@@ -190,18 +190,18 @@ def main(args, local_rank):
             batches_acm += 1
 
 
-            if args.world_size > 1:
-                average_gradients(model)
+            #if args.world_size > 1:
+            #    average_gradients(model)
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             update_lr(optimizer, args.embed_dim, batches_acm, args.warmup_steps)
             optimizer.step()
             optimizer.zero_grad()
-            if args.world_size == 1 or (dist.get_rank() == 0):
-                if batches_acm % args.print_every == -1 % args.print_every:
+            #if args.world_size == 1 or (dist.get_rank() == 0):
+            if batches_acm % args.print_every == -1 % args.print_every:
                     print ('Train Epoch %d, Batch %d, Discarded Batch %d, conc_loss %.3f, arc_loss %.3f, rel_loss %.3f'%(epoch, batches_acm, discarded_batches_acm, concept_loss_acm/batches_acm, arc_loss_acm/batches_acm, rel_loss_acm/batches_acm))
                     model.train()
                 
-                if batches_acm % args.eval_every == -1 % args.eval_every:
+            if batches_acm % args.eval_every == -1 % args.eval_every:
                     model.eval() 
                     torch.save({'args':args, 
                                 'model':model.state_dict(),
@@ -212,7 +212,7 @@ def main(args, local_rank):
 def init_processes(args, local_rank, backend='nccl'):
     os.environ['MASTER_ADDR'] = args.MASTER_ADDR
     os.environ['MASTER_PORT'] = args.MASTER_PORT
-    dist.init_process_group(backend, rank=args.start_rank+local_rank, world_size=args.world_size)
+    #dist.init_process_group(backend, rank=args.start_rank+local_rank, world_size=args.world_size)
     main(args, local_rank)
 
 if __name__ == "__main__":
@@ -227,12 +227,7 @@ if __name__ == "__main__":
         exit(0)
     args.train_batch_size = args.train_batch_size
     processes = []
-    for rank in range(args.gpus):
-        p = mp.Process(target=init_processes, args=(args, rank))
-        p.start()
-        processes.append(p)
-    for p in processes:
-        p.join()
+    init_processes(args,2)
 
     never_stop = True
     while never_stop:

@@ -150,6 +150,7 @@ class DataLoader(object):
     def __init__(self, vocabs, lex_map, filename, batch_size, for_train):
         self.data = []
         for amr, token, lemma, pos, ner in zip(*read_file(filename)):
+        
             if for_train:
                 _, _, not_ok = amr.root_centered_sort()
                 if not_ok:
@@ -157,6 +158,11 @@ class DataLoader(object):
                 if ' '.join(token) == "https://www.com.html https://www.com.html </a>":
                     continue
             cp_seq, mp_seq, token2idx, idx2token = lex_map.get_concepts(lemma, token, vocabs['predictable_concept']) 
+
+            print("datum",len(pos),len(token),len(ner),len(lemma))
+            print("datum",pos,token,ner)
+            if len(pos)!=len(token):
+                exit()
             datum = {'amr':amr, 'tok':token, 'lem':lemma, 'pos':pos, 'ner':ner, \
                      'cp_seq':cp_seq, 'mp_seq':mp_seq,\
                      'token2idx':token2idx, 'idx2token':idx2token}
@@ -181,6 +187,7 @@ class DataLoader(object):
         num_tokens, data = 0, []
         for i in idx:
             num_tokens += len(self.data[i]['tok']) + len(self.data[i]['amr'])
+            #print(self.data[i])
             data.append(self.data[i])
             if num_tokens >= self.batch_size:
                 sz = len(data)* (2 + max(len(x['tok']) for x in data) + max(len(x['amr']) for x in data))

@@ -121,6 +121,8 @@ public class convertingAMR {
 				snt = snt.replaceAll("\"", " \" ");
 				snt = snt.replaceAll("\\(", " \\( ");
 				snt = snt.replaceAll("\\)", " \\) ");
+				snt = snt.replaceAll("\\<", " \\< ");
+				snt = snt.replaceAll("\\>", " \\> ");
 				snt = snt.replaceAll("@-@", "-").replaceAll(" @:@ ", ":");
 				obj.put("snt", snt);
 

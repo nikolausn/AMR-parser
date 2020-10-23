@@ -35,6 +35,7 @@ def read_file(filename):
         myamr = AMRGraph(amr)
         amrs.append(myamr)
     f.close()
+    #print("read_datum",(len(token),len(lemma),len(pos),len(ner),len(amrs)))
     assert len(token) == len(lemma) == len(pos) == len(ner) == len(amrs), (len(token),len(lemma),len(pos),len(ner),len(amrs))
     print ('read from %s, %d amrs'%(filename, len(token)))
     return amrs, token, lemma, pos, ner

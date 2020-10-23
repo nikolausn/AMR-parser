@@ -146,6 +146,7 @@ class Parser(nn.Module):
         return new_state_dict, results
 
     def forward(self, data):
+        #print(data["pos"],data["ner"])
         word_repr, word_mask, probe = self.encode_step(data['tok'], data['lem'], data['pos'], data['ner'], data['word_char'])
 
         concept_repr = self.embed_scale * self.concept_encoder(data['concept_char_in'], data['concept_in']) + self.embed_positions(data['concept_in'])
