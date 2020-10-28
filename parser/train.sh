@@ -1,5 +1,5 @@
 dataset=../preprocessing/2017
-python3 train.py --tok_vocab ${dataset}/tok_vocab\
+python3  -W ignore::UserWarning train.py --tok_vocab ${dataset}/tok_vocab\
                 --lem_vocab ${dataset}/lem_vocab\
                 --pos_vocab  ${dataset}/pos_vocab\
                 --ner_vocab ${dataset}/ner_vocab\
@@ -29,17 +29,18 @@ python3 train.py --tok_vocab ${dataset}/tok_vocab\
                 --inference_layers 3\
                 --dropout 0.2\
                 --unk_rate 0.33\
-                --epochs 1000\
-                --train_batch_size 4444\
-                --dev_batch_size 4444 \
+                --epochs 20\
+                --train_batch_size 1000 \
+                --dev_batch_size 1000 \
                 --lr 1e-3 \
                 --warmup_steps 2000\
                 --print_every 1 \
-                --eval_every 2 \
-                --batches_per_update 4 \
+                --eval_every 500 \
+                --batches_per_update 20 \
                 --ckpt ckpt\
-                --world_size 2\
-                --gpus 2\
+                --world_size 1\
+                --gpus 1\
                 --MASTER_ADDR localhost\
                 --MASTER_PORT 29506\
-                --start_rank 0
+                --start_rank 2
+		--resume_ckpt ckpt_v2/epoch508_batch8999

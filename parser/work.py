@@ -28,6 +28,7 @@ def show_progress(model, dev_data):
     model.eval()
     loss_acm = 0.
     for batch in dev_data:
+        print(model.device)
         batch = move_to_device(batch, model.device)
         concept_loss, arc_loss, rel_loss = model(batch)
         loss = concept_loss + arc_loss + rel_loss
@@ -121,6 +122,8 @@ if __name__ == "__main__":
         pp = PostProcessor(args.sense_table, args.wiki_table, vocabs['rel']) 
         with open(test_model+args.output_suffix, 'w') as fo:
             for batch in another_test_data:
+                print("execute batch",model.device)
+                
                 batch = move_to_device(batch, model.device)
                 res = parse_batch(model, batch, args.beam_size, args.alpha, args.max_time_step)
                 for concept, relation, score in zip(res['concept'], res['relation'], res['score']):

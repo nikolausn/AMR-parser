@@ -159,8 +159,8 @@ class DataLoader(object):
                     continue
             cp_seq, mp_seq, token2idx, idx2token = lex_map.get_concepts(lemma, token, vocabs['predictable_concept']) 
 
-            print("datum",len(pos),len(token),len(ner),len(lemma))
-            print("datum",pos,token,ner)
+            #print("datum",len(pos),len(token),len(ner),len(lemma))
+            #print("datum",pos,token,ner)
             if len(pos)!=len(token):
                 exit()
             datum = {'amr':amr, 'tok':token, 'lem':lemma, 'pos':pos, 'ner':ner, \

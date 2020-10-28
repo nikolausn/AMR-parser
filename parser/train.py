@@ -112,6 +112,8 @@ def main(args, local_rank):
     torch.cuda.manual_seed_all(19940117)
     random.seed(19940117)
     device = torch.device('cuda', local_rank)
+    #print(device)
+    #exit()
     model = Parser(vocabs,
             args.word_char_dim, args.word_dim, args.pos_dim, args.ner_dim,
             args.concept_char_dim, args.concept_dim,
@@ -160,9 +162,9 @@ def main(args, local_rank):
     epoch = 0
     while True:
         batch = queue.get()
-        print("epoch",epoch)
-        print("batches_acm",batches_acm)
-        print("used_batches",used_batches)
+        #print("epoch",epoch)
+        #print("batches_acm",batches_acm)
+        #print("used_batches",used_batches)
         if isinstance(batch, str):
             epoch += 1
             print ('epoch', epoch, 'done', 'batches', batches_acm)
@@ -213,7 +215,7 @@ def init_processes(args, local_rank, backend='nccl'):
     os.environ['MASTER_ADDR'] = args.MASTER_ADDR
     os.environ['MASTER_PORT'] = args.MASTER_PORT
     dist.init_process_group(backend, rank=args.start_rank+local_rank, world_size=args.world_size)
-    main(args, local_rank)
+    main(args, start_rank+local_rank)
 
 if __name__ == "__main__":
     args = parse_config()
@@ -223,7 +225,7 @@ if __name__ == "__main__":
     args.cnn_filters = list(zip(args.cnn_filters[:-1:2], args.cnn_filters[1::2]))
 
     if args.world_size == 1:
-        main(args, 0)
+        main(args, 2)
         exit(0)
     args.train_batch_size = args.train_batch_size
     processes = []

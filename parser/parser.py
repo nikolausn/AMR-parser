@@ -16,7 +16,7 @@ class Parser(nn.Module):
                 cnn_filters, char2word_dim, char2concept_dim,
                 embed_dim, ff_embed_dim, num_heads, dropout,
                 snt_layers, graph_layers, inference_layers, rel_dim,
-                pretrained_word_embed, device=0):
+                pretrained_word_embed, device=2):
         super(Parser, self).__init__()
         self.vocabs = vocabs
 

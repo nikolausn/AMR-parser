@@ -1,10 +1,11 @@
-dataset=../preprocessing/test_2
+dataset=../preprocessing/2017
 python3 work.py --test_data ${dataset}/dev.txt_processed_preprocess \
                --test_batch_size 4444 \
-               --load_path ../preprocessing/test_2/model.ckpt \
+               --load_path ./ckpt/epoch141_batch2499 \
                --sense_table ${dataset}/sense_table \
                --wiki_table ${dataset}/wiki_table\
                --beam_size 8\
                --alpha 0.6\
-               --max_time_step 100\
-               --output_suffix _dev_out
+               --max_time_step 100 \
+               --output_suffix _dev_out \
+	           --device 0
